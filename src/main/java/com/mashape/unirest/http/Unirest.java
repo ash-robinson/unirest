@@ -42,30 +42,41 @@ import java.util.Map;
 
 public class Unirest {
 
+	private Options options = null;
+	
+	public Unirest()
+	{
+		super();
+		options = new Options();
+		options.refresh();
+	}
+	
 	/**
 	 * Set the HttpClient implementation to use for every synchronous request
 	 */
-	public static void setHttpClient(HttpClient httpClient) {
-		Options.setOption(Option.HTTPCLIENT, httpClient);
-		Options.customClientSet();
+	public void setHttpClient(HttpClient httpClient) {
+		options.setOption(Option.HTTPCLIENT, httpClient);
+		options.customClientSet();
+		options.refresh();
 	}
 
 	/**
 	 * Set the asynchronous AbstractHttpAsyncClient implementation to use for every asynchronous request
 	 */
-	public static void setAsyncHttpClient(CloseableHttpAsyncClient asyncHttpClient) {
-		Options.setOption(Option.ASYNCHTTPCLIENT, asyncHttpClient);
-		Options.customClientSet();
+	public void setAsyncHttpClient(CloseableHttpAsyncClient asyncHttpClient) {
+		options.setOption(Option.ASYNCHTTPCLIENT, asyncHttpClient);
+		options.customClientSet();
+		options.refresh();
 	}
 
 	/**
 	 * Set a proxy
 	 */
-	public static void setProxy(HttpHost proxy) {
-		Options.setOption(Option.PROXY, proxy);
+	public void setProxy(HttpHost proxy) {
+		options.setOption(Option.PROXY, proxy);
 
 		// Reload the client implementations
-		Options.refresh();
+		options.refresh();
 	}
 
 	/**
@@ -73,11 +84,11 @@ public class Unirest {
 	 * 
 	 * @param objectMapper Custom implementation of ObjectMapper interface
 	 */
-	public static void setObjectMapper(ObjectMapper objectMapper) {
-		Options.setOption(Option.OBJECT_MAPPER, objectMapper);
+	public void setObjectMapper(ObjectMapper objectMapper) {
+		options.setOption(Option.OBJECT_MAPPER, objectMapper);
 
 		// Reload the client implementations
-		Options.refresh();
+		options.refresh();
 	}
 
 	/**
@@ -86,12 +97,12 @@ public class Unirest {
 	 * @param connectionTimeout The timeout until a connection with the server is established (in milliseconds). Default is 10000. Set to zero to disable the timeout.
 	 * @param socketTimeout The timeout to receive data (in milliseconds). Default is 60000. Set to zero to disable the timeout.
 	 */
-	public static void setTimeouts(long connectionTimeout, long socketTimeout) {
-		Options.setOption(Option.CONNECTION_TIMEOUT, connectionTimeout);
-		Options.setOption(Option.SOCKET_TIMEOUT, socketTimeout);
+	public void setTimeouts(long connectionTimeout, long socketTimeout) {
+		options.setOption(Option.CONNECTION_TIMEOUT, connectionTimeout);
+		options.setOption(Option.SOCKET_TIMEOUT, socketTimeout);
 
 		// Reload the client implementations
-		Options.refresh();
+		options.refresh();
 	}
 
 	/**
@@ -100,87 +111,89 @@ public class Unirest {
 	 * @param maxTotal Defines the overall connection limit for a connection pool. Default is 200.
 	 * @param maxPerRoute Defines a connection limit per one HTTP route (this can be considered a per target host limit). Default is 20.
 	 */
-	public static void setConcurrency(int maxTotal, int maxPerRoute) {
-		Options.setOption(Option.MAX_TOTAL, maxTotal);
-		Options.setOption(Option.MAX_PER_ROUTE, maxPerRoute);
+	public void setConcurrency(int maxTotal, int maxPerRoute) {
+		options.setOption(Option.MAX_TOTAL, maxTotal);
+		options.setOption(Option.MAX_PER_ROUTE, maxPerRoute);
 
 		// Reload the client implementations
-		Options.refresh();
+		options.refresh();
 	}
 
 	/**
 	 * Clear default headers
 	 */
-	public static void clearDefaultHeaders() {
-		Options.setOption(Option.DEFAULT_HEADERS, null);
+	public void clearDefaultHeaders() {
+		options.setOption(Option.DEFAULT_HEADERS, null);
+		options.refresh();
 	}
 
 	/**
 	 * Set default header
 	 */
 	@SuppressWarnings("unchecked")
-	public static void setDefaultHeader(String name, String value) {
-		Object headers = Options.getOption(Option.DEFAULT_HEADERS);
+	public void setDefaultHeader(String name, String value) {
+		Object headers = options.getOption(Option.DEFAULT_HEADERS);
 		if (headers == null) {
 			headers = new HashMap<String, String>();
 		}
 		((Map<String, String>) headers).put(name, value);
-		Options.setOption(Option.DEFAULT_HEADERS, headers);
+		options.setOption(Option.DEFAULT_HEADERS, headers);
+		options.refresh();
 	}
 
 	/**
 	 * Close the asynchronous client and its event loop. Use this method to close all the threads and allow an application to exit.
 	 */
-	public static void shutdown() throws IOException {
+	public void shutdown() throws IOException {
 		// Closing the Sync HTTP client
-		CloseableHttpClient syncClient = (CloseableHttpClient) Options.getOption(Option.HTTPCLIENT);
+		CloseableHttpClient syncClient = (CloseableHttpClient) options.getOption(Option.HTTPCLIENT);
 		if (syncClient != null) {
 			syncClient.close();
 		}
 
-		SyncIdleConnectionMonitorThread syncIdleConnectionMonitorThread = (SyncIdleConnectionMonitorThread) Options.getOption(Option.SYNC_MONITOR);
+		SyncIdleConnectionMonitorThread syncIdleConnectionMonitorThread = (SyncIdleConnectionMonitorThread) options.getOption(Option.SYNC_MONITOR);
 		if (syncIdleConnectionMonitorThread != null) {
 			syncIdleConnectionMonitorThread.interrupt();
 		}
 
 		// Closing the Async HTTP client (if running)
-		CloseableHttpAsyncClient asyncClient = (CloseableHttpAsyncClient) Options.getOption(Option.ASYNCHTTPCLIENT);
+		CloseableHttpAsyncClient asyncClient = (CloseableHttpAsyncClient) options.getOption(Option.ASYNCHTTPCLIENT);
 		if (asyncClient != null && asyncClient.isRunning()) {
 			asyncClient.close();
 		}
 
-		AsyncIdleConnectionMonitorThread asyncMonitorThread = (AsyncIdleConnectionMonitorThread) Options.getOption(Option.ASYNC_MONITOR);
+		AsyncIdleConnectionMonitorThread asyncMonitorThread = (AsyncIdleConnectionMonitorThread) options.getOption(Option.ASYNC_MONITOR);
 		if (asyncMonitorThread != null) {
 			asyncMonitorThread.interrupt();
 		}
 	}
 
-	public static GetRequest get(String url) {
-		return new GetRequest(HttpMethod.GET, url);
+	public GetRequest get(String url) {
+		return new GetRequest(HttpMethod.GET, url, options);
 	}
 
-	public static GetRequest head(String url) {
-		return new GetRequest(HttpMethod.HEAD, url);
+	public GetRequest head(String url) {
+		return new GetRequest(HttpMethod.HEAD, url, options);
 	}
 
-	public static HttpRequestWithBody options(String url) {
-		return new HttpRequestWithBody(HttpMethod.OPTIONS, url);
+	public HttpRequestWithBody options(String url) {
+		return new HttpRequestWithBody(HttpMethod.OPTIONS, url, options);
 	}
 
-	public static HttpRequestWithBody post(String url) {
-		return new HttpRequestWithBody(HttpMethod.POST, url);
+	public HttpRequestWithBody post(String url) {
+		return new HttpRequestWithBody(HttpMethod.POST, url, options);
 	}
 
-	public static HttpRequestWithBody delete(String url) {
-		return new HttpRequestWithBody(HttpMethod.DELETE, url);
+	public HttpRequestWithBody delete(String url) {
+		return new HttpRequestWithBody(HttpMethod.DELETE, url, options);
 	}
 
-	public static HttpRequestWithBody patch(String url) {
-		return new HttpRequestWithBody(HttpMethod.PATCH, url);
+	public HttpRequestWithBody patch(String url) {
+		return new HttpRequestWithBody(HttpMethod.PATCH, url, options);
 	}
 
-	public static HttpRequestWithBody put(String url) {
-		return new HttpRequestWithBody(HttpMethod.PUT, url);
+	public HttpRequestWithBody put(String url) {
+		return new HttpRequestWithBody(HttpMethod.PUT, url, options);
 	}
 
 }

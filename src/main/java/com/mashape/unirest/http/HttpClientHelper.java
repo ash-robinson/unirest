@@ -25,40 +25,23 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.mashape.unirest.http;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.Map.*;
+import java.util.concurrent.*;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.methods.HttpOptions;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.concurrent.FutureCallback;
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.nio.entity.NByteArrayEntity;
+import org.apache.http.*;
+import org.apache.http.client.*;
+import org.apache.http.client.methods.*;
+import org.apache.http.concurrent.*;
+import org.apache.http.impl.nio.client.*;
+import org.apache.http.nio.entity.*;
 
-import com.mashape.unirest.http.async.Callback;
-import com.mashape.unirest.http.async.utils.AsyncIdleConnectionMonitorThread;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.http.options.Option;
-import com.mashape.unirest.http.options.Options;
-import com.mashape.unirest.http.utils.ClientFactory;
+import com.mashape.unirest.http.async.*;
+import com.mashape.unirest.http.async.utils.*;
+import com.mashape.unirest.http.exceptions.*;
+import com.mashape.unirest.http.options.*;
 import com.mashape.unirest.request.HttpRequest;
 
 public class HttpClientHelper {
@@ -68,7 +51,12 @@ public class HttpClientHelper {
 	private static final String USER_AGENT_HEADER = "user-agent";
 	private static final String USER_AGENT = "unirest-java/1.3.11";
 
-	private static <T> FutureCallback<org.apache.http.HttpResponse> prepareCallback(final Class<T> responseClass, final Callback<T> callback) {
+	public HttpClientHelper()
+	{
+		super();
+	}
+	
+	private <T> FutureCallback<org.apache.http.HttpResponse> prepareCallback(final Class<T> responseClass, final Callback<T> callback, final Options options) {
 		if (callback == null)
 			return null;
 
@@ -79,7 +67,7 @@ public class HttpClientHelper {
 			}
 
 			public void completed(org.apache.http.HttpResponse arg0) {
-				callback.completed(new HttpResponse<T>(arg0, responseClass));
+				callback.completed(new HttpResponse<T>(arg0, responseClass, options));
 			}
 
 			public void failed(Exception arg0) {
@@ -89,17 +77,17 @@ public class HttpClientHelper {
 		};
 	}
 
-	public static <T> Future<HttpResponse<T>> requestAsync(HttpRequest request, final Class<T> responseClass, Callback<T> callback) {
-		HttpUriRequest requestObj = prepareRequest(request, true);
+	public <T> Future<HttpResponse<T>> requestAsync(HttpRequest request, final Class<T> responseClass, Callback<T> callback, final Options options) {
+		HttpUriRequest requestObj = prepareRequest(request, true, options);
 
-		CloseableHttpAsyncClient asyncHttpClient = ClientFactory.getAsyncHttpClient();
+		CloseableHttpAsyncClient asyncHttpClient = (CloseableHttpAsyncClient) options.getOption(Option.ASYNCHTTPCLIENT);
 		if (!asyncHttpClient.isRunning()) {
 			asyncHttpClient.start();
-			AsyncIdleConnectionMonitorThread asyncIdleConnectionMonitorThread = (AsyncIdleConnectionMonitorThread) Options.getOption(Option.ASYNC_MONITOR);
+			AsyncIdleConnectionMonitorThread asyncIdleConnectionMonitorThread = (AsyncIdleConnectionMonitorThread) options.getOption(Option.ASYNC_MONITOR);
 			asyncIdleConnectionMonitorThread.start();
 		}
 
-		final Future<org.apache.http.HttpResponse> future = asyncHttpClient.execute(requestObj, prepareCallback(responseClass, callback));
+		final Future<org.apache.http.HttpResponse> future = asyncHttpClient.execute(requestObj, prepareCallback(responseClass, callback, options));
 
 		return new Future<HttpResponse<T>>() {
 
@@ -117,26 +105,26 @@ public class HttpClientHelper {
 
 			public HttpResponse<T> get() throws InterruptedException, ExecutionException {
 				org.apache.http.HttpResponse httpResponse = future.get();
-				return new HttpResponse<T>(httpResponse, responseClass);
+				return new HttpResponse<T>(httpResponse, responseClass, options);
 			}
 
 			public HttpResponse<T> get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 				org.apache.http.HttpResponse httpResponse = future.get(timeout, unit);
-				return new HttpResponse<T>(httpResponse, responseClass);
+				return new HttpResponse<T>(httpResponse, responseClass, options);
 			}
 		};
 	}
 
-	public static <T> HttpResponse<T> request(HttpRequest request, Class<T> responseClass) throws UnirestException {
-		HttpRequestBase requestObj = prepareRequest(request, false);
-		HttpClient client = ClientFactory.getHttpClient(); // The
+	public <T> HttpResponse<T> request(HttpRequest request, Class<T> responseClass, final Options options) throws UnirestException {
+		HttpRequestBase requestObj = prepareRequest(request, false, options);
+		HttpClient client = (HttpClient) options.getOption(Option.HTTPCLIENT); 
+															// The
 															// DefaultHttpClient
 															// is thread-safe
-
 		org.apache.http.HttpResponse response;
 		try {
 			response = client.execute(requestObj);
-			HttpResponse<T> httpResponse = new HttpResponse<T>(response, responseClass);
+			HttpResponse<T> httpResponse = new HttpResponse<T>(response, responseClass, options);
 			requestObj.releaseConnection();
 			return httpResponse;
 		} catch (Exception e) {
@@ -146,9 +134,8 @@ public class HttpClientHelper {
 		}
 	}
 
-	private static HttpRequestBase prepareRequest(HttpRequest request, boolean async) {
-
-		Object defaultHeaders = Options.getOption(Option.DEFAULT_HEADERS);
+	private HttpRequestBase prepareRequest(HttpRequest request, boolean async, Options options) {
+		Object defaultHeaders = options.getOption(Option.DEFAULT_HEADERS);
 		if (defaultHeaders != null) {
 			@SuppressWarnings("unchecked")
 			Set<Entry<String, String>> entrySet = ((Map<String, String>) defaultHeaders).entrySet();

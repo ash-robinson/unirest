@@ -48,8 +48,8 @@ import java.util.Map.Entry;
 
 public class HttpRequestWithBody extends HttpRequest {
 
-	public HttpRequestWithBody(HttpMethod method, String url) {
-		super(method, url);
+	public HttpRequestWithBody(HttpMethod method, String url, Options options) {
+		super(method, url, options);
 	}
 
 	@Override
@@ -149,7 +149,7 @@ public class HttpRequestWithBody extends HttpRequest {
 	}
 
 	public RequestBodyEntity body(Object body) {
-		ObjectMapper objectMapper = (ObjectMapper) Options.getOption(Option.OBJECT_MAPPER);
+		ObjectMapper objectMapper = (ObjectMapper) this.options.getOption(Option.OBJECT_MAPPER);
 
 		if (objectMapper == null) {
 			throw new RuntimeException("Serialization Impossible. Can't find an ObjectMapper implementation.");

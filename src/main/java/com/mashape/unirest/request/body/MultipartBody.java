@@ -47,6 +47,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 
+import com.mashape.unirest.http.options.*;
 import com.mashape.unirest.http.utils.MapUtil;
 import com.mashape.unirest.request.BaseRequest;
 import com.mashape.unirest.request.HttpRequest;
@@ -60,7 +61,12 @@ public class MultipartBody extends BaseRequest implements Body {
 	private HttpMultipartMode mode;
 
 	public MultipartBody(HttpRequest httpRequest) {
-		super(httpRequest);
+		super(httpRequest, httpRequest.getOptions());
+		this.httpRequestObj = httpRequest;
+	}
+	
+	public MultipartBody(HttpRequest httpRequest, Options options) {
+		super(httpRequest, options);
 		this.httpRequestObj = httpRequest;
 	}
 

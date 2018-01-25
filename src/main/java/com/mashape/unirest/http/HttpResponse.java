@@ -49,9 +49,9 @@ public class HttpResponse<T> {
 	private T body;
 
 	@SuppressWarnings("unchecked")
-	public HttpResponse(org.apache.http.HttpResponse response, Class<T> responseClass) {
+	public HttpResponse(org.apache.http.HttpResponse response, Class<T> responseClass, Options options) {
 		HttpEntity responseEntity = response.getEntity();
-		ObjectMapper objectMapper = (ObjectMapper) Options.getOption(Option.OBJECT_MAPPER);
+		ObjectMapper objectMapper = (ObjectMapper) options.getOption(Option.OBJECT_MAPPER);
 
 		Header[] allHeaders = response.getAllHeaders();
 		for (Header header : allHeaders) {

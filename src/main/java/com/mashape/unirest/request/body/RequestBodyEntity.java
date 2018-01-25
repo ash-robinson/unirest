@@ -29,6 +29,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
 
 import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.options.*;
 import com.mashape.unirest.request.BaseRequest;
 import com.mashape.unirest.request.HttpRequest;
 
@@ -36,8 +37,12 @@ public class RequestBodyEntity extends BaseRequest implements Body {
 
 	private Object body;
 
+	public RequestBodyEntity(HttpRequest httpRequest, Options options) {
+		super(httpRequest, options);
+	}
+	
 	public RequestBodyEntity(HttpRequest httpRequest) {
-		super(httpRequest);
+		super(httpRequest, httpRequest.getOptions());
 	}
 
 	public RequestBodyEntity body(String body) {
