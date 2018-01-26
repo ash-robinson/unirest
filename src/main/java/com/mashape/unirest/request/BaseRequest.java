@@ -25,15 +25,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.mashape.unirest.request;
 
-import com.mashape.unirest.http.HttpClientHelper;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.async.Callback;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.http.options.*;
+import java.io.*;
+import java.util.concurrent.*;
 
-import java.io.InputStream;
-import java.util.concurrent.Future;
+import com.google.gson.*;
+import com.mashape.unirest.http.*;
+import com.mashape.unirest.http.async.*;
+import com.mashape.unirest.http.exceptions.*;
+import com.mashape.unirest.http.options.*;
 
 public abstract class BaseRequest {
 
@@ -44,13 +43,13 @@ public abstract class BaseRequest {
 	protected HttpClientHelper httpClientHelper;
 
 	protected BaseRequest(HttpRequest httpRequest) {
-		super();
+		this();
 		this.httpRequest = httpRequest;
 		this.options = httpRequest.getOptions();
 	}
 	
 	protected BaseRequest(HttpRequest httpRequest, Options options) {
-		super();
+		this();
 		this.httpRequest = httpRequest;
 		this.options = options;
 	}
@@ -80,16 +79,16 @@ public abstract class BaseRequest {
 		return httpClientHelper.requestAsync(httpRequest, String.class, callback, options);
 	}
 
-	public HttpResponse<JsonNode> asJson() throws UnirestException {
-		return httpClientHelper.request(httpRequest, JsonNode.class, options);
+	public HttpResponse<JsonElement> asJson() throws UnirestException {
+		return httpClientHelper.request(httpRequest, JsonElement.class, options);
 	}
 
-	public Future<HttpResponse<JsonNode>> asJsonAsync() {
-		return httpClientHelper.requestAsync(httpRequest, JsonNode.class, null, options);
+	public Future<HttpResponse<JsonElement>> asJsonAsync() {
+		return httpClientHelper.requestAsync(httpRequest, JsonElement.class, null, options);
 	}
 
-	public Future<HttpResponse<JsonNode>> asJsonAsync(Callback<JsonNode> callback) {
-		return httpClientHelper.requestAsync(httpRequest, JsonNode.class, callback, options);
+	public Future<HttpResponse<JsonElement>> asJsonAsync(Callback<JsonElement> callback) {
+		return httpClientHelper.requestAsync(httpRequest, JsonElement.class, callback, options);
 	}
 
 	public <T> HttpResponse<T> asObject(Class<? extends T> responseClass) throws UnirestException {

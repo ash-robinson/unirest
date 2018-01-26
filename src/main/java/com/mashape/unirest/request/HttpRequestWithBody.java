@@ -25,26 +25,19 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.mashape.unirest.request;
 
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.content.InputStreamBody;
+import java.io.*;
+import java.util.*;
+import java.util.Map.*;
 
-import com.mashape.unirest.http.HttpMethod;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.ObjectMapper;
-import com.mashape.unirest.http.options.Option;
-import com.mashape.unirest.http.options.Options;
-import com.mashape.unirest.request.body.MultipartBody;
-import com.mashape.unirest.request.body.RawBody;
-import com.mashape.unirest.request.body.RequestBodyEntity;
+import org.apache.http.entity.*;
+import org.apache.http.entity.mime.content.*;
+import org.json.*;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.google.gson.*;
+import com.mashape.unirest.http.*;
+import com.mashape.unirest.http.options.*;
+import com.mashape.unirest.request.body.*;
+import com.mashape.unirest.test.helper.*;
 
 public class HttpRequestWithBody extends HttpRequest {
 
@@ -138,49 +131,15 @@ public class HttpRequestWithBody extends HttpRequest {
 		return body;
 	}
 
-	public RequestBodyEntity body(JsonNode body) {
-		return body(body.toString());
-	}
-
 	public RequestBodyEntity body(String body) {
 		RequestBodyEntity b = new RequestBodyEntity(this).body(body);
 		this.body = b;
 		return b;
 	}
-
-	public RequestBodyEntity body(Object body) {
-		ObjectMapper objectMapper = (ObjectMapper) this.options.getOption(Option.OBJECT_MAPPER);
-
-		if (objectMapper == null) {
-			throw new RuntimeException("Serialization Impossible. Can't find an ObjectMapper implementation.");
-		}
-
-		return body(objectMapper.writeValue(body));
-	}
-
-	public RawBody body(byte[] body) {
-		RawBody b = new RawBody(this).body(body);
+	
+	public RequestBodyEntity body(byte[] sentBytes) {
+		RequestBodyEntity b = new RequestBodyEntity(this).body(sentBytes.toString());
 		this.body = b;
 		return b;
-	}
-
-	/**
-	 * Sugar method for body operation
-	 *
-	 * @param body raw org.JSONObject
-	 * @return RequestBodyEntity instance
-	 */
-	public RequestBodyEntity body(JSONObject body) {
-		return body(body.toString());
-	}
-
-	/**
-	 * Sugar method for body operation
-	 *
-	 * @param body raw org.JSONArray
-	 * @return RequestBodyEntity instance
-	 */
-	public RequestBodyEntity body(JSONArray body) {
-		return body(body.toString());
 	}
 }

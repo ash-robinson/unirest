@@ -1,22 +1,14 @@
 package com.mashape.unirest.test.arr;
 
-import com.arr.rest.*;
-import com.arr.rest.CUnirest;
-import com.arr.rest.CUnirestFactory;
-
-import org.apache.http.*;
 import org.junit.*;
-import org.mockserver.client.proxy.*;
-import org.mockserver.client.server.*;
 import org.mockserver.integration.*;
-import org.mockserver.junit.*;
 import org.mockserver.model.*;
 import org.mockserver.verify.*;
-import com.mashape.unirest.http.*;
+
+import com.arr.rest.*;
+import com.google.gson.*;
 import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.options.*;
-import com.mashape.unirest.request.*;
-import com.mashape.unirest.request.HttpRequest;
+import com.mashape.unirest.http.exceptions.*;
 
 public class CMockServerProxyTest
 {
@@ -24,7 +16,7 @@ public class CMockServerProxyTest
 	private ClientAndServer mockServer;
 
 	private int statusCode = 200;
-	private String body = "chainsaw charlie";
+	private String body = "{\"chainsaw\":\"charlie\"}";
 	
 	@Before
 	public void startProxy() {
@@ -57,29 +49,42 @@ public class CMockServerProxyTest
 	}
 	
 	@Test
+	@Ignore
 	public void test() throws Exception
 	{				
 		CUnirest unirest1 = CUnirestFactory.getStandardInstance();
 		unirest1.getClient().setDefaultHeader("hooligan", "back");
-		HttpResponse<String> resp1 = unirest1.getClient().get("http://127.0.0.1:9000/api1")
-											.asString();		
+		HttpResponse<JsonElement> resp1 = unirest1.getClient().get("http://127.0.0.1:9000/api1")
+											.asJson();		
 		Assert.assertEquals(666, resp1.getStatus());
-		Assert.assertEquals(body, resp1.getBody());
+		Assert.assertEquals(body, resp1.getBody().toString());
 		proxy.verify(org.mockserver.model.HttpRequest.request("/[a-zA-Z0-9]+"), VerificationTimes.once());
 		mockServer.verify(org.mockserver.model.HttpRequest.request("/[a-zA-Z0-9]+"), VerificationTimes.once());
 		
 		CUnirest unirest2 = CUnirestFactory.getCustomTimeoutInstance(1000000, 1000000);
-		HttpResponse<String> resp2 = unirest2.getClient().get("http://127.0.0.1:9000/api2").asString();		
+		HttpResponse<JsonElement> resp2 = unirest2.getClient().get("http://127.0.0.1:9000/api2").asJson();		
 		Assert.assertEquals(200, resp2.getStatus());
-		Assert.assertEquals(body, resp2.getBody());
+		Assert.assertEquals(body, resp2.getBody().toString());
 		proxy.verify(org.mockserver.model.HttpRequest.request("/[a-zA-Z0-9]+"), VerificationTimes.exactly(2));
 		mockServer.verify(org.mockserver.model.HttpRequest.request("/[a-zA-Z0-9]+"), VerificationTimes.exactly(2));
 		
-		HttpResponse<String> resp3 = unirest1.getClient().get("http://127.0.0.1:9000/api3").asString();		
+		HttpResponse<JsonElement> resp3 = unirest1.getClient().get("http://127.0.0.1:9000/api3").asJson();		
 		Assert.assertEquals(666, resp3.getStatus());
-		Assert.assertEquals(body, resp3.getBody());
+		Assert.assertEquals(body, resp3.getBody().toString());
 		proxy.verify(org.mockserver.model.HttpRequest.request("/[a-zA-Z0-9]+"), VerificationTimes.exactly(3));
 		mockServer.verify(org.mockserver.model.HttpRequest.request("/[a-zA-Z0-9]+"), VerificationTimes.exactly(3));
 		
+	}
+	
+	@Test
+	public void test1() throws UnirestException
+	{
+		String sourceString = "'\"@こんにちは-test-123-" + Math.random();
+		byte[] sentBytes = sourceString.getBytes();
+		
+		CUnirest unirest = CUnirestFactory.getStandardInstance();
+		HttpResponse<String> response = unirest.getClient().post("http://127.0.0.1:9000/api1")
+												.field("name", "value")
+												.asString();
 	}
 }

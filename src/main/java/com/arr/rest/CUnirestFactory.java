@@ -23,8 +23,8 @@ public class CUnirestFactory implements Serializable
 	/**
 	 * Returns an SSL enabled client with custom timeouts
 	 * 
-	 * @param connectionTimeout - connection timeout override for client
-	 * @param socketTimeout - socket timeout override for client
+	 * @param connectionTimeout connection timeout override for client
+	 * @param socketTimeout socket timeout override for client
 	 * @return an SSL enabled client with custom timeouts
 	 */
 	public static CUnirest getCustomTimeoutInstance(final long connectionTimeout, final long socketTimeout)
@@ -37,8 +37,8 @@ public class CUnirestFactory implements Serializable
 	/**
 	 * Returns an SSL enabled client with standard proxy
 	 * 
-	 * @param host - the proxy host address
-	 * @param port - the port to connect to via proxy
+	 * @param host the proxy host address
+	 * @param port the port to connect to via proxy
 	 * @return an SSL enabled client with standard proxy
 	 */
 	public static CUnirest getProxyInstance(final String host, final int port)
@@ -51,10 +51,10 @@ public class CUnirestFactory implements Serializable
 	/**
 	 * Return an SSL enabled client with authenticated proxy
 	 * 
-	 * @param username - username for proxy authentication
-	 * @param password - password for proxy authentication
-	 * @param host - the proxy host address
-	 * @param port - the port to connect to via proxy
+	 * @param username username for proxy authentication
+	 * @param password password for proxy authentication
+	 * @param host the proxy host address
+	 * @param port the port to connect to via proxy
 	 * @return an SSL enabled client with authenticated proxy
 	 */
 	public static CUnirest getProxyInstance(final String username, final String password, final String host, final int port)
@@ -67,10 +67,10 @@ public class CUnirestFactory implements Serializable
 	/**
 	 * Return an SSL enabled client with standard proxy and custom timeout
 	 * 
-	 * @param host - the proxy host address
-	 * @param port - the port to connect to via proxy
-	 * @param connectionTimeout - connection timeout override for client
-	 * @param socketTimeout - socket timeout override for client
+	 * @param host the proxy host address
+	 * @param port the port to connect to via proxy
+	 * @param connectionTimeout connection timeout override for client
+	 * @param socketTimeout socket timeout override for client
 	 * @return an SSL enabled client with standard proxy and custom timeout
 	 */
 	public static CUnirest getProxyInstanceWithCustomTimeoutInstance(final String host, final int port, final long connectionTimeout, final long socketTimeout)
@@ -83,12 +83,12 @@ public class CUnirestFactory implements Serializable
 	/**
 	 * Returns an SSL enabled client with authenticated proxy and custom timeout
 	 * 
-	 * @param host - the proxy host address
-	 * @param port - the port to connect to via proxy
-	 * @param username - username for proxy authentication
-	 * @param password - password for proxy authentication
-	 * @param connectionTimeout - connection timeout override for client
-	 * @param socketTimeout - socket timeout override for client
+	 * @param host the proxy host address
+	 * @param port the port to connect to via proxy
+	 * @param username username for proxy authentication
+	 * @param password password for proxy authentication
+	 * @param connectionTimeout connection timeout override for client
+	 * @param socketTimeout socket timeout override for client
 	 * @return an SSL enabled client with authenticated proxy and custom timeout
 	 */
 	public static CUnirest getProxyInstanceWithCustomTimeoutInstance(final String host, final int port, final String username, final String password, final long connectionTimeout, final long socketTimeout)

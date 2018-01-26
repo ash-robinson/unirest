@@ -135,6 +135,8 @@ public class HttpClientHelper {
 	}
 
 	private HttpRequestBase prepareRequest(HttpRequest request, boolean async, Options options) {
+		
+		
 		Object defaultHeaders = options.getOption(Option.DEFAULT_HEADERS);
 		if (defaultHeaders != null) {
 			@SuppressWarnings("unchecked")
