@@ -58,20 +58,11 @@ public class CUnirest implements Serializable
 	{
 		certFilename = name;
 	}
-	
-	/**
-	 * defaults: 10000ms, 60000ms
-	 * @param connectionTimeout
-	 * @param socketTimeout
-	 */
-	public void SetTimeout(final long connectionTimeout, final long socketTimeout)
-	{
-		InitCustomTimeoutSSLClient(connectionTimeout, socketTimeout);
-	}
 
-	//pass in the fields currently
-	/*
-	 * Standard - uses No Auth
+	/**
+	 * Return instance using proxy
+	 * @param host
+	 * @param port
 	 */
 	public void InitProxy(String host, int port)
 	{
@@ -102,9 +93,8 @@ public class CUnirest implements Serializable
 		client.setHttpClient(httpClient);
 	}
 
-	//pass in the fields currently
 	/**
-	 * Uses Basic Auth on the proxy
+	 * Return instance using proxy with auth
 	 * @param username
 	 * @param password
 	 * @param host
@@ -145,7 +135,7 @@ public class CUnirest implements Serializable
 	}
 
 	/**
-	 * Fix to SSL connection problems in Unirest
+	 * return standard instance with fix to SSL connection problems in base Unirest
 	 */
 	public void InitSSLClient()
 	{
@@ -169,6 +159,11 @@ public class CUnirest implements Serializable
 		client.setHttpClient(httpClient);
 	}
 
+	/**
+	 * instance with custom timeout
+	 * @param connectionTimeout
+	 * @param socketTimeout
+	 */
 	public void InitCustomTimeoutSSLClient(final long connectionTimeout, final long socketTimeout)
 	{
 		final SSLConnectionSocketFactory sslsf;
@@ -196,6 +191,101 @@ public class CUnirest implements Serializable
 		
 		client.setHttpClient(httpClient);
 	}
+	
+
+	/**
+	 * instance using proxy with custom timeout
+	 * @param host
+	 * @param port
+	 * @param connectionTimeout
+	 * @param socketTimeout
+	 */
+	public void InitProxyWithCustomTimeout(final String host, final int port, final long connectionTimeout, final long socketTimeout)
+	{
+		final SSLConnectionSocketFactory sslsf;
+		try
+		{
+			sslsf = new SSLConnectionSocketFactory(SSLContext.getDefault(), NoopHostnameVerifier.INSTANCE);
+		}
+		catch (NoSuchAlgorithmException ae)
+		{
+			throw new RuntimeException(ae);
+		}
+
+		final Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory> create().register("http", new PlainConnectionSocketFactory()).register("https", sslsf).build();
+		final PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(registry);
+		cm.setMaxTotal(100);
+		cm.setValidateAfterInactivity(CONNECTION_MANAGER_INACTIVITY_TIMEOUT);
+
+		//proxy specific stuff
+		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+		httpClientBuilder.useSystemProperties();
+		httpClientBuilder.setProxy(new HttpHost(host, port));
+		httpClientBuilder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
+		httpClientBuilder.setSSLSocketFactory(sslsf);
+		httpClientBuilder.setConnectionManager(cm);
+		httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(3, false));
+		
+		//custom timeout
+		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(Math.toIntExact(connectionTimeout))
+				.setSocketTimeout(Math.toIntExact(socketTimeout))
+				.setConnectionRequestTimeout(CONNECTION_MANAGER_INACTIVITY_TIMEOUT).build();		
+		httpClientBuilder.setDefaultRequestConfig(requestConfig);
+		
+		CloseableHttpClient httpClient = httpClientBuilder.build();
+		client.setHttpClient(httpClient);
+	}
+	
+	/**
+	 * instance using proxy using auth and custom timeout
+	 * @param username
+	 * @param password
+	 * @param host
+	 * @param port
+	 * @param connectionTimeout
+	 * @param socketTimeout
+	 */
+	public void InitProxyWithCustomTimeout(final String username, final String password, final String host, final int port, final long connectionTimeout, final long socketTimeout)
+	{
+		final SSLConnectionSocketFactory sslsf;
+		try
+		{
+			sslsf = new SSLConnectionSocketFactory(SSLContext.getDefault(), NoopHostnameVerifier.INSTANCE);
+		}
+		catch (NoSuchAlgorithmException ae)
+		{
+			throw new RuntimeException(ae);
+		}
+
+		final Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory> create().register("http", new PlainConnectionSocketFactory()).register("https", sslsf).build();
+		final PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(registry);
+		cm.setMaxTotal(100);
+		cm.setValidateAfterInactivity(CONNECTION_MANAGER_INACTIVITY_TIMEOUT);
+
+		//proxy specific stuff
+		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+		CredentialsProvider credsProvider = new BasicCredentialsProvider();
+		credsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+		httpClientBuilder.useSystemProperties();
+		httpClientBuilder.setProxy(new HttpHost(host, port));
+		httpClientBuilder.setDefaultCredentialsProvider(credsProvider);
+		httpClientBuilder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
+		Lookup<AuthSchemeProvider> authProviders = RegistryBuilder.<AuthSchemeProvider> create().register(AuthSchemes.BASIC, new BasicSchemeFactory()).build();
+		httpClientBuilder.setDefaultAuthSchemeRegistry(authProviders);
+		httpClientBuilder.setSSLSocketFactory(sslsf);
+		httpClientBuilder.setConnectionManager(cm);
+		httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(3, false));
+		
+		//custom timeout
+		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(Math.toIntExact(connectionTimeout))
+				.setSocketTimeout(Math.toIntExact(socketTimeout))
+				.setConnectionRequestTimeout(CONNECTION_MANAGER_INACTIVITY_TIMEOUT).build();		
+		httpClientBuilder.setDefaultRequestConfig(requestConfig);
+		
+		CloseableHttpClient httpClient = httpClientBuilder.build();
+		client.setHttpClient(httpClient);
+	}
+	
 
 	/**
 	 * Dynamically adds the cert at the location {@linkplain url}:{@linkplain port} to the cacerts keystore 

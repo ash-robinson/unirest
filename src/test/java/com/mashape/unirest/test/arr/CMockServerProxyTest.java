@@ -59,7 +59,7 @@ public class CMockServerProxyTest
 	@Test
 	public void test() throws Exception
 	{				
-		CUnirest unirest1 = new CUnirestFactory().getStandardInstance();
+		CUnirest unirest1 = CUnirestFactory.getStandardInstance();
 		unirest1.getClient().setDefaultHeader("hooligan", "back");
 		HttpResponse<String> resp1 = unirest1.getClient().get("http://127.0.0.1:9000/api1")
 											.asString();		
@@ -68,7 +68,7 @@ public class CMockServerProxyTest
 		proxy.verify(org.mockserver.model.HttpRequest.request("/[a-zA-Z0-9]+"), VerificationTimes.once());
 		mockServer.verify(org.mockserver.model.HttpRequest.request("/[a-zA-Z0-9]+"), VerificationTimes.once());
 		
-		CUnirest unirest2 = new CUnirestFactory().getCustomTimeoutInstance(1000000, 1000000);
+		CUnirest unirest2 = CUnirestFactory.getCustomTimeoutInstance(1000000, 1000000);
 		HttpResponse<String> resp2 = unirest2.getClient().get("http://127.0.0.1:9000/api2").asString();		
 		Assert.assertEquals(200, resp2.getStatus());
 		Assert.assertEquals(body, resp2.getBody());
