@@ -52,7 +52,8 @@ public class CUnirest implements Serializable
 	
 	/**
 	 * Assumed at root folder
-	 * @param name
+	 * 
+	 * @param name - the filename of the certificate
 	 */
 	public void setCertificateFilename(String name)
 	{
@@ -61,8 +62,9 @@ public class CUnirest implements Serializable
 
 	/**
 	 * Return instance using proxy
-	 * @param host
-	 * @param port
+	 * 
+	 * @param host - the proxy host address
+	 * @param port - the port to connect to via proxy
 	 */
 	public void InitProxy(String host, int port)
 	{
@@ -95,10 +97,11 @@ public class CUnirest implements Serializable
 
 	/**
 	 * Return instance using proxy with auth
-	 * @param username
-	 * @param password
-	 * @param host
-	 * @param port
+	 * 
+	 * @param username - username for proxy authentication
+	 * @param password - password for proxy authentication
+	 * @param host - the proxy host address
+	 * @param port - the port to connect to via proxy
 	 */
 	public void InitProxy(String username, String password, String host, int port)
 	{
@@ -135,7 +138,7 @@ public class CUnirest implements Serializable
 	}
 
 	/**
-	 * return standard instance with fix to SSL connection problems in base Unirest
+	 * Return standard instance with fix to SSL connection problems in base Unirest
 	 */
 	public void InitSSLClient()
 	{
@@ -160,9 +163,9 @@ public class CUnirest implements Serializable
 	}
 
 	/**
-	 * instance with custom timeout
-	 * @param connectionTimeout
-	 * @param socketTimeout
+	 * Return instance with custom timeout
+	 * @param connectionTimeout - connection timeout override for client
+	 * @param socketTimeout - socket timeout override for client
 	 */
 	public void InitCustomTimeoutSSLClient(final long connectionTimeout, final long socketTimeout)
 	{
@@ -194,11 +197,11 @@ public class CUnirest implements Serializable
 	
 
 	/**
-	 * instance using proxy with custom timeout
-	 * @param host
-	 * @param port
-	 * @param connectionTimeout
-	 * @param socketTimeout
+	 * Return instance using proxy with custom timeout
+	 * @param host - the proxy host address
+	 * @param port - the port to connect to via proxy
+	 * @param connectionTimeout - connection timeout override for client
+	 * @param socketTimeout - socket timeout override for client
 	 */
 	public void InitProxyWithCustomTimeout(final String host, final int port, final long connectionTimeout, final long socketTimeout)
 	{
@@ -237,13 +240,13 @@ public class CUnirest implements Serializable
 	}
 	
 	/**
-	 * instance using proxy using auth and custom timeout
-	 * @param username
-	 * @param password
-	 * @param host
-	 * @param port
-	 * @param connectionTimeout
-	 * @param socketTimeout
+	 * Return instance using proxy using auth and custom timeout
+	 * @param username - username for proxy authentication
+	 * @param password - password for proxy authentication
+	 * @param host - the proxy host address
+	 * @param port - the port to connect to via proxy
+	 * @param connectionTimeout - connection timeout override for client
+	 * @param socketTimeout - socket timeout override for client
 	 */
 	public void InitProxyWithCustomTimeout(final String username, final String password, final String host, final int port, final long connectionTimeout, final long socketTimeout)
 	{
@@ -288,11 +291,11 @@ public class CUnirest implements Serializable
 	
 
 	/**
-	 * Dynamically adds the cert at the location {@linkplain url}:{@linkplain port} to the cacerts keystore 
+	 * Dynamically adds the cert at the location [host]:[port] to the cacerts keystore 
 	 * Uses default passphrase if unspecified
-	 * @param host
-	 * @param port
-	 * @throws Exception
+	 * @param host - the proxy host address
+	 * @param port - the port to connect to via proxy
+	 * @throws Exception - encompasses various exceptions thrown during the process
 	 */
 	public void InstallCertificate(final String host, final int port) throws Exception
 	{
@@ -300,11 +303,11 @@ public class CUnirest implements Serializable
 	}
 
 	/**
-	 * Dynamically adds the cert at the location {@linkplain url}:{@linkplain port} to the cacerts keystore 
-	 * @param host
-	 * @param port
-	 * @param passphrase
-	 * @throws Exception
+	 * Dynamically adds the cert at the location [host]:[port] to the cacerts keystore 
+	 * @param host - the proxy host address
+	 * @param port - the port to connect to via proxy
+	 * @param passphrase - specified keystore passphrase
+	 * @throws Exception - encompasses various exceptions thrown during the process
 	 */
 	public void InstallCertificate(final String host, final int port, final String passphrase) throws Exception
 	{

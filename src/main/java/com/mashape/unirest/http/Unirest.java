@@ -53,6 +53,8 @@ public class Unirest {
 	
 	/**
 	 * Set the HttpClient implementation to use for every synchronous request
+	 * 
+	 * @param httpClient - a custom httpclient for use with unirest operations
 	 */
 	public void setHttpClient(HttpClient httpClient) {
 		options.setOption(Option.HTTPCLIENT, httpClient);
@@ -62,6 +64,8 @@ public class Unirest {
 
 	/**
 	 * Set the asynchronous AbstractHttpAsyncClient implementation to use for every asynchronous request
+	 * 
+	 * @param asyncHttpClient - a custom asynHttpclient for use with unirest operations
 	 */
 	public void setAsyncHttpClient(CloseableHttpAsyncClient asyncHttpClient) {
 		options.setOption(Option.ASYNCHTTPCLIENT, asyncHttpClient);
@@ -71,6 +75,8 @@ public class Unirest {
 
 	/**
 	 * Set a proxy
+	 * 
+	 * @param proxy - set a proxy for standard client operations
 	 */
 	public void setProxy(HttpHost proxy) {
 		options.setOption(Option.PROXY, proxy);
@@ -81,7 +87,7 @@ public class Unirest {
 
 	/**
 	 * Set the ObjectMapper implementation to use for Response to Object binding
-	 * 
+	 *
 	 * @param objectMapper Custom implementation of ObjectMapper interface
 	 */
 	public void setObjectMapper(ObjectMapper objectMapper) {
@@ -129,6 +135,9 @@ public class Unirest {
 
 	/**
 	 * Set default header
+	 * 
+	 * @param name - header name
+	 * @param value - header value
 	 */
 	@SuppressWarnings("unchecked")
 	public void setDefaultHeader(String name, String value) {
