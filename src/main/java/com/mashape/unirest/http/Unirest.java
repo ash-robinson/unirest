@@ -48,7 +48,7 @@ public class Unirest {
 	{
 		super();
 		options = new Options();
-		options.refresh();
+		options.refresh(); //on init reload with default config
 	}
 	
 	/**
@@ -58,8 +58,7 @@ public class Unirest {
 	 */
 	public void setHttpClient(HttpClient httpClient) {
 		options.setOption(Option.HTTPCLIENT, httpClient);
-		options.customClientSet();
-		options.refresh();
+		options.customClientSet();		
 	}
 
 	/**
@@ -70,7 +69,6 @@ public class Unirest {
 	public void setAsyncHttpClient(CloseableHttpAsyncClient asyncHttpClient) {
 		options.setOption(Option.ASYNCHTTPCLIENT, asyncHttpClient);
 		options.customClientSet();
-		options.refresh();
 	}
 
 	/**
@@ -80,9 +78,6 @@ public class Unirest {
 	 */
 	public void setProxy(HttpHost proxy) {
 		options.setOption(Option.PROXY, proxy);
-
-		// Reload the client implementations
-		options.refresh();
 	}
 
 	/**
@@ -92,9 +87,6 @@ public class Unirest {
 	 */
 	public void setObjectMapper(ObjectMapper objectMapper) {
 		options.setOption(Option.OBJECT_MAPPER, objectMapper);
-
-		// Reload the client implementations
-		options.refresh();
 	}
 
 	/**
@@ -106,9 +98,6 @@ public class Unirest {
 	public void setTimeouts(long connectionTimeout, long socketTimeout) {
 		options.setOption(Option.CONNECTION_TIMEOUT, connectionTimeout);
 		options.setOption(Option.SOCKET_TIMEOUT, socketTimeout);
-
-		// Reload the client implementations
-		options.refresh();
 	}
 
 	/**
@@ -120,9 +109,6 @@ public class Unirest {
 	public void setConcurrency(int maxTotal, int maxPerRoute) {
 		options.setOption(Option.MAX_TOTAL, maxTotal);
 		options.setOption(Option.MAX_PER_ROUTE, maxPerRoute);
-
-		// Reload the client implementations
-		options.refresh();
 	}
 
 	/**
@@ -130,7 +116,6 @@ public class Unirest {
 	 */
 	public void clearDefaultHeaders() {
 		options.setOption(Option.DEFAULT_HEADERS, null);
-		options.refresh();
 	}
 
 	/**
@@ -147,7 +132,6 @@ public class Unirest {
 		}
 		((Map<String, String>) headers).put(name, value);
 		options.setOption(Option.DEFAULT_HEADERS, headers);
-		options.refresh();
 	}
 
 	/**

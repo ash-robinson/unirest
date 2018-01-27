@@ -142,4 +142,12 @@ public class HttpRequestWithBody extends HttpRequest {
 		this.body = b;
 		return b;
 	}
+
+	public BaseRequest body(GetResponse getResponse)
+	{
+		//TODO: Perhaps remove altogether
+		RequestBodyEntity b = new RequestBodyEntity(this).body(getResponse.toString());
+		this.body = b;
+		return b;
+	}
 }
