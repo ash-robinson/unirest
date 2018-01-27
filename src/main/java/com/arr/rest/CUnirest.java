@@ -20,7 +20,6 @@ import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.*;
 
 import com.mashape.unirest.http.*;
-import com.mashape.unirest.http.exceptions.*;
 
 /**
  * Note: Always call {@link #InitSSLClient()} before using in an ssl context to avoid cert problems in Unirest HTTP implementation
@@ -55,7 +54,7 @@ public class CUnirest implements Serializable
 	 * 
 	 * @param name the filename of the certificate
 	 */
-	public void setCertificateFilename(String name)
+	public void setCertificateFilename(final String name)
 	{
 		certFilename = name;
 	}
@@ -66,7 +65,7 @@ public class CUnirest implements Serializable
 	 * @param host the proxy host address
 	 * @param port the port to connect to via proxy
 	 */
-	public void InitProxy(String host, int port)
+	public void InitProxy(final String host, final int port)
 	{
 		final SSLConnectionSocketFactory sslsf;
 		try
@@ -103,7 +102,7 @@ public class CUnirest implements Serializable
 	 * @param host the proxy host address
 	 * @param port the port to connect to via proxy
 	 */
-	public void InitProxy(String username, String password, String host, int port)
+	public void InitProxy(final String username, final String password, final String host, final int port)
 	{
 		final SSLConnectionSocketFactory sslsf;
 		try

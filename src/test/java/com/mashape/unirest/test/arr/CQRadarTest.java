@@ -1,5 +1,7 @@
 package com.mashape.unirest.test.arr;
 
+import java.util.*;
+
 import org.junit.*;
 
 import com.arr.rest.*;
@@ -76,7 +78,7 @@ public class CQRadarTest
 				.header("SEC", token)
 				.asJson();
 
-		System.out.println("TEST: " + test.getStatus());
-		System.out.println("TEST: " + test.getBody());
+		Assert.assertEquals(200, test.getStatus());
+//		System.out.println("TEST: " + test.getBody());
 	}
 }
