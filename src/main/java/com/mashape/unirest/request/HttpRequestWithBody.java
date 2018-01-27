@@ -31,13 +31,10 @@ import java.util.Map.*;
 
 import org.apache.http.entity.*;
 import org.apache.http.entity.mime.content.*;
-import org.json.*;
 
-import com.google.gson.*;
 import com.mashape.unirest.http.*;
 import com.mashape.unirest.http.options.*;
 import com.mashape.unirest.request.body.*;
-import com.mashape.unirest.test.helper.*;
 
 public class HttpRequestWithBody extends HttpRequest {
 
@@ -139,14 +136,6 @@ public class HttpRequestWithBody extends HttpRequest {
 	
 	public RequestBodyEntity body(byte[] sentBytes) {
 		RequestBodyEntity b = new RequestBodyEntity(this).body(sentBytes.toString());
-		this.body = b;
-		return b;
-	}
-
-	public BaseRequest body(GetResponse getResponse)
-	{
-		//TODO: Perhaps remove altogether
-		RequestBodyEntity b = new RequestBodyEntity(this).body(getResponse.toString());
 		this.body = b;
 		return b;
 	}
