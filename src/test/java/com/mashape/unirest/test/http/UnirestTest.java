@@ -787,7 +787,7 @@ public class UnirestTest {
 		postResponseMock.setUrl("http://httpbin.org/post");
 
 		HttpResponse<JsonElement> postResponse = unirest.getClient().post(postResponseMock.getUrl()).header("accept", "application/Json")
-				.header("Content-Type", "application/Json").body(postResponseMock).asJson();
+				.header("Content-Type", "application/Json").body(postResponseMock.toString()).asJson();
 
 		assertEquals(200, postResponse.getStatus());
 		assertEquals(postResponse.getBody().getAsJsonObject().get("data"), "{\"url\":\"http://httpbin.org/post\"}");
