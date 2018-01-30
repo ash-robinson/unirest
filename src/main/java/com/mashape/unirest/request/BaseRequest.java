@@ -71,11 +71,11 @@ public abstract class BaseRequest {
 		return this.httpClientHelper.request(httpRequest, String.class, options);
 	}
 
-	public Future<HttpResponse<String>> asStringAsync() {
+	public Future<HttpResponse<String>> asStringAsync() throws UnirestException {
 		return httpClientHelper.requestAsync(httpRequest, String.class, null, options);
 	}
 
-	public Future<HttpResponse<String>> asStringAsync(Callback<String> callback) {
+	public Future<HttpResponse<String>> asStringAsync(Callback<String> callback) throws UnirestException {
 		return httpClientHelper.requestAsync(httpRequest, String.class, callback, options);
 	}
 
@@ -83,11 +83,11 @@ public abstract class BaseRequest {
 		return httpClientHelper.request(httpRequest, JsonElement.class, options);
 	}
 
-	public Future<HttpResponse<JsonElement>> asJsonAsync() {
+	public Future<HttpResponse<JsonElement>> asJsonAsync() throws UnirestException {
 		return httpClientHelper.requestAsync(httpRequest, JsonElement.class, null, options);
 	}
 
-	public Future<HttpResponse<JsonElement>> asJsonAsync(Callback<JsonElement> callback) {
+	public Future<HttpResponse<JsonElement>> asJsonAsync(Callback<JsonElement> callback) throws UnirestException {
 		return httpClientHelper.requestAsync(httpRequest, JsonElement.class, callback, options);
 	}
 
@@ -95,11 +95,11 @@ public abstract class BaseRequest {
 		return httpClientHelper.request(httpRequest, (Class) responseClass, options);
 	}
 
-	public <T> Future<HttpResponse<T>> asObjectAsync(Class<? extends T> responseClass) {
+	public <T> Future<HttpResponse<T>> asObjectAsync(Class<? extends T> responseClass) throws UnirestException {
 		return httpClientHelper.requestAsync(httpRequest, (Class) responseClass, null, options);
 	}
 
-	public <T> Future<HttpResponse<T>> asObjectAsync(Class<? extends T> responseClass, Callback<T> callback) {
+	public <T> Future<HttpResponse<T>> asObjectAsync(Class<? extends T> responseClass, Callback<T> callback) throws UnirestException {
 		return httpClientHelper.requestAsync(httpRequest, (Class) responseClass, callback, options);
 	}
 
@@ -107,11 +107,11 @@ public abstract class BaseRequest {
 		return httpClientHelper.request(httpRequest, InputStream.class, options);
 	}
 
-	public Future<HttpResponse<InputStream>> asBinaryAsync() {
+	public Future<HttpResponse<InputStream>> asBinaryAsync() throws UnirestException {
 		return httpClientHelper.requestAsync(httpRequest, InputStream.class, null, options);
 	}
 
-	public Future<HttpResponse<InputStream>> asBinaryAsync(Callback<InputStream> callback) {
+	public Future<HttpResponse<InputStream>> asBinaryAsync(Callback<InputStream> callback) throws UnirestException {
 		return httpClientHelper.requestAsync(httpRequest, InputStream.class, callback, options);
 	}
 

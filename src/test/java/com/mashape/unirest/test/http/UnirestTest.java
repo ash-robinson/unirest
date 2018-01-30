@@ -196,7 +196,7 @@ public class UnirestTest {
 	}
 
 	@Test
-	public void testAsync() throws InterruptedException, ExecutionException {
+	public void testAsync() throws InterruptedException, ExecutionException, UnirestException {
 		Future<HttpResponse<JsonElement>> future = unirest.getClient().post("http://httpbin.org/post").header("accept", "application/Json").field("param1", "value1").field("param2", "bye").asJsonAsync();
 
 		assertNotNull(future);
@@ -216,7 +216,7 @@ public class UnirestTest {
 	}
 
 	@Test
-	public void testAsyncCallback() throws InterruptedException, ExecutionException {
+	public void testAsyncCallback() throws InterruptedException, ExecutionException, UnirestException {
 		unirest.getClient().post("http://httpbin.org/post").header("accept", "application/Json").field("param1", "value1").field("param2", "bye").asJsonAsync(new Callback<JsonElement>() {
 
 			public void failed(UnirestException e) {
@@ -602,7 +602,7 @@ public class UnirestTest {
 	}
 
 	@Test
-	public void testAsyncCustomContentType() throws InterruptedException {
+	public void testAsyncCustomContentType() throws InterruptedException, UnirestException {
 		unirest.getClient().post("http://httpbin.org/post").header("accept", "application/Json").header("Content-Type", "application/Json").body("{\"hello\":\"world\"}").asJsonAsync(new Callback<JsonElement>() {
 
 			public void failed(UnirestException e) {
@@ -628,7 +628,7 @@ public class UnirestTest {
 	}
 
 	@Test
-	public void testAsyncCustomContentTypeAndFormParams() throws InterruptedException {
+	public void testAsyncCustomContentTypeAndFormParams() throws InterruptedException, UnirestException {
 		unirest.getClient().post("http://httpbin.org/post").header("accept", "application/Json").header("Content-Type", "application/x-www-form-urlencoded").field("name", "Mark").field("hello", "world").asJsonAsync(new Callback<JsonElement>() {
 
 			public void failed(UnirestException e) {

@@ -77,7 +77,7 @@ public class HttpClientHelper {
 		};
 	}
 
-	public <T> Future<HttpResponse<T>> requestAsync(HttpRequest request, final Class<T> responseClass, Callback<T> callback, final Options options) {
+	public <T> Future<HttpResponse<T>> requestAsync(HttpRequest request, final Class<T> responseClass, Callback<T> callback, final Options options) throws UnirestException {
 		HttpUriRequest requestObj = prepareRequest(request, true, options);
 
 		CloseableHttpAsyncClient asyncHttpClient = (CloseableHttpAsyncClient) options.getOption(Option.ASYNCHTTPCLIENT);
@@ -134,7 +134,7 @@ public class HttpClientHelper {
 		}
 	}
 
-	private HttpRequestBase prepareRequest(HttpRequest request, boolean async, Options options) {
+	private HttpRequestBase prepareRequest(HttpRequest request, boolean async, Options options) throws UnirestException {
 		
 		
 		Object defaultHeaders = options.getOption(Option.DEFAULT_HEADERS);
@@ -168,8 +168,10 @@ public class HttpClientHelper {
 			} else if (urlToRequest.substring(urlToRequest.length() - 1).equals("?")) {
 				urlToRequest = urlToRequest.substring(0, urlToRequest.length() - 1);
 			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		} 
+		catch (Exception e) 
+		{
+			throw new UnirestException(e);
 		}
 
 		switch (request.getHttpMethod()) {
@@ -220,7 +222,7 @@ public class HttpClientHelper {
 						NByteArrayEntity en = new NByteArrayEntity(output.toByteArray());
 						((HttpEntityEnclosingRequestBase) reqObj).setEntity(en);
 					} catch (IOException e) {
-						throw new RuntimeException(e);
+						throw new UnirestException(e);
 					}
 				} else {
 					((HttpEntityEnclosingRequestBase) reqObj).setEntity(entity);
