@@ -39,8 +39,8 @@ import org.apache.http.impl.client.*;
 import org.apache.http.impl.nio.client.*;
 import org.junit.*;
 
-import com.arr.rest.*;
 import com.google.gson.*;
+import com.mashape.unirest.arr.*;
 import com.mashape.unirest.http.*;
 import com.mashape.unirest.http.async.*;
 import com.mashape.unirest.http.exceptions.*;
@@ -58,7 +58,6 @@ public class UnirestTest {
 	public void setUp() {
 		lock = new CountDownLatch(1);
 		status = false;
-		new CUnirestFactory();
 		unirest = CUnirestFactory.getStandardInstance();
 	}
 

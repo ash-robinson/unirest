@@ -4,8 +4,8 @@ import java.util.*;
 
 import org.junit.*;
 
-import com.arr.rest.*;
 import com.google.gson.*;
+import com.mashape.unirest.arr.*;
 import com.mashape.unirest.http.*;
 import com.mashape.unirest.http.exceptions.*;
 

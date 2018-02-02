@@ -1,4 +1,4 @@
-package com.arr.rest;
+package com.mashape.unirest.arr;
 
 import java.io.*;
 import java.util.*;
