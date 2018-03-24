@@ -1,4 +1,4 @@
-package com.mashape.unirest.test.arr;
+package com.mashape.unirest.test.arr.integrations;
 
 import java.util.*;
 
