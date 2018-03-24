@@ -25,19 +25,24 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.mashape.unirest.request.body;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.*;
+import org.apache.http.entity.*;
 
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.request.BaseRequest;
+import com.google.gson.*;
+import com.mashape.unirest.http.options.*;
+import com.mashape.unirest.request.*;
 import com.mashape.unirest.request.HttpRequest;
 
 public class RequestBodyEntity extends BaseRequest implements Body {
 
 	private Object body;
 
+	public RequestBodyEntity(HttpRequest httpRequest, Options options) {
+		super(httpRequest, options);
+	}
+	
 	public RequestBodyEntity(HttpRequest httpRequest) {
-		super(httpRequest);
+		super(httpRequest, httpRequest.getOptions());
 	}
 
 	public RequestBodyEntity body(String body) {
@@ -45,7 +50,7 @@ public class RequestBodyEntity extends BaseRequest implements Body {
 		return this;
 	}
 
-	public RequestBodyEntity body(JsonNode body) {
+	public RequestBodyEntity body(JsonElement body) {
 		this.body = body.toString();
 		return this;
 	}

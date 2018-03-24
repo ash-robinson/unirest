@@ -25,6 +25,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.mashape.unirest.request.body;
 
+import com.mashape.unirest.http.options.*;
 import com.mashape.unirest.request.BaseRequest;
 import com.mashape.unirest.request.HttpRequest;
 import org.apache.http.HttpEntity;
@@ -35,7 +36,11 @@ public class RawBody extends BaseRequest implements Body {
 	private byte[] body;
 
 	public RawBody(HttpRequest httpRequest) {
-		super(httpRequest);
+		super(httpRequest, httpRequest.getOptions());
+	}
+	
+	public RawBody(HttpRequest httpRequest, Options options) {
+		super(httpRequest, options);
 	}
 
 	public RawBody body(byte[] body) {

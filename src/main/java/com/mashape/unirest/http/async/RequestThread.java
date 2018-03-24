@@ -28,6 +28,7 @@ package com.mashape.unirest.http.async;
 import com.mashape.unirest.http.HttpClientHelper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.http.options.*;
 import com.mashape.unirest.request.HttpRequest;
 
 public class RequestThread<T> extends Thread {
@@ -35,18 +36,22 @@ public class RequestThread<T> extends Thread {
 	private HttpRequest httpRequest;
 	private Class<T> responseClass;
 	private Callback<T> callback;
+	private Options options;
+	private HttpClientHelper httpClientHelper;
 
-	public RequestThread(HttpRequest httpRequest, Class<T> responseClass, Callback<T> callback) {
+	public RequestThread(HttpRequest httpRequest, Class<T> responseClass, Callback<T> callback, Options options) {
 		this.httpRequest = httpRequest;
 		this.responseClass = responseClass;
 		this.callback = callback;
+		this.options = options;
+		this.httpClientHelper = new HttpClientHelper();
 	}
 
 	@Override
 	public void run() {
 		HttpResponse<T> response;
 		try {
-			response = HttpClientHelper.request(httpRequest, responseClass);
+			response = httpClientHelper.request(httpRequest, responseClass, options);
 			if (callback != null) {
 				callback.completed(response);
 			}

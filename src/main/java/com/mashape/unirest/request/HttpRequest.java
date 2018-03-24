@@ -38,6 +38,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.mashape.unirest.http.HttpMethod;
+import com.mashape.unirest.http.options.*;
 import com.mashape.unirest.http.utils.Base64Coder;
 import com.mashape.unirest.http.utils.URLParamEncoder;
 import com.mashape.unirest.request.body.Body;
@@ -49,10 +50,11 @@ public class HttpRequest extends BaseRequest {
 	Map<String, List<String>> headers = new TreeMap<String, List<String>>(String.CASE_INSENSITIVE_ORDER);
 	protected Body body;
 
-	public HttpRequest(HttpMethod method, String url) {
+	public HttpRequest(HttpMethod method, String url, Options options) {
 		this.httpMethod = method;
 		this.url = url;
-		super.httpRequest = this;
+		this.options = options;
+		super.setHttpRequest(this);
 	}
 
 	public HttpRequest routeParam(String name, String value) {
@@ -147,6 +149,10 @@ public class HttpRequest extends BaseRequest {
 
 	public Body getBody() {
 		return body;
+	}
+	
+	public Options getOptions() {
+		return options;
 	}
 
 }

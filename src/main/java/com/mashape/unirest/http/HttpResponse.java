@@ -25,20 +25,16 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.mashape.unirest.http;
 
-import com.mashape.unirest.http.options.Option;
-import com.mashape.unirest.http.options.Options;
-import com.mashape.unirest.http.utils.ResponseUtils;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.StatusLine;
-import org.apache.http.util.EntityUtils;
+import java.io.*;
+import java.util.*;
+import java.util.zip.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
+import org.apache.http.*;
+import org.apache.http.util.*;
+
+import com.google.gson.*;
+import com.mashape.unirest.http.options.*;
+import com.mashape.unirest.http.utils.*;
 
 public class HttpResponse<T> {
 
@@ -49,9 +45,9 @@ public class HttpResponse<T> {
 	private T body;
 
 	@SuppressWarnings("unchecked")
-	public HttpResponse(org.apache.http.HttpResponse response, Class<T> responseClass) {
+	public HttpResponse(org.apache.http.HttpResponse response, Class<T> responseClass, Options options) {
 		HttpEntity responseEntity = response.getEntity();
-		ObjectMapper objectMapper = (ObjectMapper) Options.getOption(Option.OBJECT_MAPPER);
+		ObjectMapper objectMapper = (ObjectMapper) options.getOption(Option.OBJECT_MAPPER);
 
 		Header[] allHeaders = response.getAllHeaders();
 		for (Header header : allHeaders) {
@@ -90,9 +86,9 @@ public class HttpResponse<T> {
 				}
 				this.rawBody = new ByteArrayInputStream(rawBody);
 
-				if (JsonNode.class.equals(responseClass)) {
+				if (JsonElement.class.equals(responseClass)) {
 					String jsonString = new String(rawBody, charset).trim();
-					this.body = (T) new JsonNode(jsonString);
+					this.body = (T) new JsonParser().parse(jsonString);
 				} else if (String.class.equals(responseClass)) {
 					this.body = (T) new String(rawBody, charset);
 				} else if (InputStream.class.equals(responseClass)) {
@@ -100,7 +96,7 @@ public class HttpResponse<T> {
 				} else if (objectMapper != null) {
 					this.body = objectMapper.readValue(new String(rawBody, charset), responseClass);
 				} else {
-					throw new Exception("Only String, JsonNode and InputStream are supported, or an ObjectMapper implementation is required.");
+					throw new Exception("Only String, JsonElement and InputStream are supported, or an ObjectMapper implementation is required.");
 				}
 			} catch (Exception e) {
 				throw new RuntimeException(e);

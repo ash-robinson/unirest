@@ -28,11 +28,12 @@ package com.mashape.unirest.request;
 import java.util.Map;
 
 import com.mashape.unirest.http.HttpMethod;
+import com.mashape.unirest.http.options.*;
 
 public class GetRequest extends HttpRequest {
 
-	public GetRequest(HttpMethod method, String url) {
-		super(method, url);
+	public GetRequest(HttpMethod method, String url, Options options) {
+		super(method, url, options);
 	}
 
 	public GetRequest routeParam(String name, String value) {

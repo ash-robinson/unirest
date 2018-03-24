@@ -16,4 +16,10 @@ public class GetResponse {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	
+	public String toString()
+	{
+		//TODO: check this with test or maybe remove
+		return "url:" + this.url;
+	}
 }
