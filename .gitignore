@@ -1,4 +1,3 @@
-## Generic
 .classpath
 pom.xml.releaseBackup
 .project
@@ -10,9 +9,3 @@ META-INF
 .idea
 *.iml
 
-## Testing
-*.cer
-cacerts
-files
-src/test/java/com/mashape/unirest/test/arr/integrations/
-src/test/java/com/mashape/unirest/test/arr/threatintel/
