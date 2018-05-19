@@ -14,5 +14,5 @@ META-INF
 *.cer
 cacerts
 files
-src/test/java/com/mashape/unirest/test/arr/integrations/
-src/test/java/com/mashape/unirest/test/arr/threatintel/
+src/test/java/com/github/ashrobinson/rest/unirest/integrations/
+src/test/java/com/github/ashrobinson/rest/unirest/threatintel/
