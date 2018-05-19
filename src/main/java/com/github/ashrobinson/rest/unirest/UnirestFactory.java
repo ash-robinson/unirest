@@ -14,9 +14,9 @@ public class UnirestFactory implements Serializable
 	 * 
 	 * @return a standard SSL enabled client 
 	 */
-	public static UnirestBuilder getStandardInstance()
+	public static UnirestInstance getStandardInstance()
 	{
-		UnirestBuilder unirest = new UnirestBuilder();
+		UnirestInstance unirest = new UnirestInstance();
 		unirest.InitSSLClient();
 		return unirest;
 	}
@@ -28,9 +28,9 @@ public class UnirestFactory implements Serializable
 	 * @param socketTimeout socket timeout override for client
 	 * @return an SSL enabled client with custom timeouts
 	 */
-	public static UnirestBuilder getCustomTimeoutInstance(final long connectionTimeout, final long socketTimeout)
+	public static UnirestInstance getCustomTimeoutInstance(final long connectionTimeout, final long socketTimeout)
 	{
-		UnirestBuilder unirest = new UnirestBuilder();
+		UnirestInstance unirest = new UnirestInstance();
 		unirest.InitCustomTimeoutSSLClient(connectionTimeout, socketTimeout);
 		return unirest;
 	}
@@ -42,9 +42,9 @@ public class UnirestFactory implements Serializable
 	 * @param port the port to connect to via proxy
 	 * @return an SSL enabled client with standard proxy
 	 */
-	public static UnirestBuilder getProxyInstance(final String host, final int port)
+	public static UnirestInstance getProxyInstance(final String host, final int port)
 	{
-		UnirestBuilder unirest = new UnirestBuilder();
+		UnirestInstance unirest = new UnirestInstance();
 		unirest.InitProxy(host, port);
 		return unirest;
 	}
@@ -58,9 +58,9 @@ public class UnirestFactory implements Serializable
 	 * @param port the port to connect to via proxy
 	 * @return an SSL enabled client with authenticated proxy
 	 */
-	public static UnirestBuilder getProxyInstance(final String username, final String password, final String host, final int port)
+	public static UnirestInstance getProxyInstance(final String username, final String password, final String host, final int port)
 	{
-		UnirestBuilder unirest = new UnirestBuilder();
+		UnirestInstance unirest = new UnirestInstance();
 		unirest.InitProxy(username, password, host, port);
 		return unirest;
 	}
@@ -74,9 +74,9 @@ public class UnirestFactory implements Serializable
 	 * @param socketTimeout socket timeout override for client
 	 * @return an SSL enabled client with standard proxy and custom timeout
 	 */
-	public static UnirestBuilder getProxyInstanceWithCustomTimeoutInstance(final String host, final int port, final long connectionTimeout, final long socketTimeout)
+	public static UnirestInstance getProxyInstanceWithCustomTimeoutInstance(final String host, final int port, final long connectionTimeout, final long socketTimeout)
 	{
-		UnirestBuilder unirest = new UnirestBuilder();
+		UnirestInstance unirest = new UnirestInstance();
 		unirest.InitProxyWithCustomTimeout(host, port, connectionTimeout, socketTimeout);
 		return unirest;
 	}
@@ -92,9 +92,9 @@ public class UnirestFactory implements Serializable
 	 * @param socketTimeout socket timeout override for client
 	 * @return an SSL enabled client with authenticated proxy and custom timeout
 	 */
-	public static UnirestBuilder getProxyInstanceWithCustomTimeoutInstance(final String host, final int port, final String username, final String password, final long connectionTimeout, final long socketTimeout)
+	public static UnirestInstance getProxyInstanceWithCustomTimeoutInstance(final String host, final int port, final String username, final String password, final long connectionTimeout, final long socketTimeout)
 	{
-		UnirestBuilder unirest = new UnirestBuilder();
+		UnirestInstance unirest = new UnirestInstance();
 		unirest.InitProxy(host, port);
 		return unirest;
 	}	

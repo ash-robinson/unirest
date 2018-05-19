@@ -52,7 +52,7 @@ public class CMockServerProxyTest
 	@Ignore
 	public void test() throws Exception
 	{				
-		UnirestBuilder unirest1 = UnirestFactory.getStandardInstance();
+		UnirestInstance unirest1 = UnirestFactory.getStandardInstance();
 		unirest1.getClient().setDefaultHeader("hooligan", "back");
 		HttpResponse<JsonElement> resp1 = unirest1.getClient().get("http://127.0.0.1:9000/api1")
 											.asJson();		
@@ -61,7 +61,7 @@ public class CMockServerProxyTest
 		proxy.verify(org.mockserver.model.HttpRequest.request("/[a-zA-Z0-9]+"), VerificationTimes.once());
 		mockServer.verify(org.mockserver.model.HttpRequest.request("/[a-zA-Z0-9]+"), VerificationTimes.once());
 		
-		UnirestBuilder unirest2 = UnirestFactory.getCustomTimeoutInstance(1000000, 1000000);
+		UnirestInstance unirest2 = UnirestFactory.getCustomTimeoutInstance(1000000, 1000000);
 		HttpResponse<JsonElement> resp2 = unirest2.getClient().get("http://127.0.0.1:9000/api2").asJson();		
 		Assert.assertEquals(200, resp2.getStatus());
 		Assert.assertEquals(body, resp2.getBody().toString());
@@ -82,7 +82,7 @@ public class CMockServerProxyTest
 		String sourceString = "'\"@こんにちは-test-123-" + Math.random();
 		byte[] sentBytes = sourceString.getBytes();
 		
-		UnirestBuilder unirest = UnirestFactory.getStandardInstance();
+		UnirestInstance unirest = UnirestFactory.getStandardInstance();
 		HttpResponse<String> response = unirest.getClient().post("http://127.0.0.1:9000/api1")
 												.field("name", "value")
 												.asString();

@@ -27,7 +27,7 @@ import com.github.ashrobinson.rest.http.*;
  * @author ARR
  *
  */
-public class UnirestBuilder implements Serializable
+public class UnirestInstance implements Serializable
 {
 	static private String CERT_DEFAULT_FILENAME = "cacerts";
 	static private String CERT_DEFAULT_PASSWORD = "changeit";
@@ -37,7 +37,7 @@ public class UnirestBuilder implements Serializable
 	private Unirest client = null;
 	private String certFilename = null;
 
-	UnirestBuilder()
+	UnirestInstance()
 	{
 		super();
 		client = new Unirest();

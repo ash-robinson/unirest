@@ -52,7 +52,7 @@ public class UnirestTest {
 
 	private CountDownLatch lock;
 	private boolean status;
-	private UnirestBuilder unirest = null;
+	private UnirestInstance unirest = null;
 	
 	@Before
 	public void setUp() {
