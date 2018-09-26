@@ -136,12 +136,12 @@ public class Unirest {
 		}
 	}
 
-	public GetRequest get(String url) {
-		return new GetRequest(HttpMethod.GET, url, options);
+	public HttpRequestWithBody get(String url) {
+		return new HttpRequestWithBody(HttpMethod.GET, url, options);
 	}
 
-	public GetRequest head(String url) {
-		return new GetRequest(HttpMethod.HEAD, url, options);
+	public HttpRequestWithBody head(String url) {
+		return new HttpRequestWithBody(HttpMethod.HEAD, url, options);
 	}
 
 	public HttpRequestWithBody options(String url) {
