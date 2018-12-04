@@ -177,7 +177,7 @@ public class HttpClientHelper {
 
 		switch (request.getHttpMethod()) {
 		case GET:
-			reqObj = new HttpGet(urlToRequest);
+			reqObj = new HttpGetWithBody(urlToRequest);
 			break;
 		case POST:
 			reqObj = new HttpPost(urlToRequest);
@@ -210,7 +210,7 @@ public class HttpClientHelper {
 		}
 
 		// Set body
-		if (!(request.getHttpMethod() == HttpMethod.GET || request.getHttpMethod() == HttpMethod.HEAD)) {
+		if ( request.getHttpMethod() != HttpMethod.HEAD) {
 			if (request.getBody() != null) {
 				HttpEntity entity = request.getBody().getEntity();
 				if (async) {

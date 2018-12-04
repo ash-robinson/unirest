@@ -135,7 +135,7 @@ public class UnirestTest {
 		HttpResponse<JsonElement> response = unirest.getClient().get("http://httpbin.org/get?name=mark").header("user-agent", "hello-world").asJson();
 		assertEquals("hello-world", response.getBody().getAsJsonObject().get("headers").getAsJsonObject().get("User-Agent").getAsString());
 
-		GetRequest getRequest = unirest.getClient().get("http");
+		HttpRequestWithBody getRequest = unirest.getClient().get("http");
 		for (Object current : Arrays.asList(0, 1, 2)) {
 			getRequest.queryString("name", current);
 		}
@@ -713,7 +713,7 @@ public class UnirestTest {
 
 	@Test
 	public void testCaseInsensitiveHeaders() throws UnirestException {
-		GetRequest request = unirest.getClient().get("http://httpbin.org/headers").header("Name", "Marco");
+		HttpRequestWithBody request = unirest.getClient().get("http://httpbin.org/headers").header("Name", "Marco");
 		assertEquals(1, request.getHeaders().size());
 		assertEquals("Marco", request.getHeaders().get("name").get(0));
 		assertEquals("Marco", request.getHeaders().get("NAme").get(0));
